@@ -1,0 +1,41 @@
+package channel
+
+var viewStreamTemplate = `
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Channel {{ .Name }} live stream</title>
+		<style>
+		body {
+			margin:0;
+			padding:0;
+			background:#000;
+		}
+		
+        video {
+			position:absolute;
+			width:100%;
+			height:100%;
+		}
+		</style>
+	</head>
+	<body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.2/flv.min.js"></script>
+		 
+        <video id="videoElement" controls autoplay x5-video-player-type="h5" x5-video-player-fullscreen="true" playsinline webkit-playsinline>
+            Your browser is too old which doesn't support HTML5 video.
+        </video>
+		<script>
+if (flvjs.isSupported()) {
+	var videoElement = document.getElementById('videoElement');
+	var flvPlayer = flvjs.createPlayer({
+		type: 'flv',
+		url: '/api/v1/channels/{{ .Id }}/stream'
+	});
+	flvPlayer.attachMediaElement(videoElement);
+	flvPlayer.load();
+	flvPlayer.play();
+}
+		</script>
+	</body>
+</html>`
