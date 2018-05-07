@@ -6,6 +6,16 @@ import (
 	"github.com/go-pg/migrations"
 )
 
+const facesTable = `
+CREATE TABLE faces (
+id serial NOT NULL,
+owner_id integer NOT NULL,
+path text NOT NULL,
+name text NOT NULL,
+PRIMARY KEY (id),
+FOREIGN KEY (owner_id) REFERENCES users(id)
+)`
+
 const usersTable = `
 CREATE TABLE users (
 id serial NOT NULL,
@@ -23,9 +33,11 @@ PRIMARY KEY (id)
 func init() {
 	up := []string{
 		usersTable,
+		facesTable,
 	}
 
 	down := []string{
+		`DROP TABLE faces`,
 		`DROP TABLE users`,
 	}
 

@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"time"
 	"io/ioutil"
+	"strconv"
+	"fmt"
 )
 
 type UserCredentials struct {
@@ -97,7 +99,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Find user
-	user := &User{Id: claims["user_id"].(string)}
+	user := &User{Id: claims["user_id"].(int)}
 	err = db.Select(user)
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
@@ -146,10 +148,15 @@ func Retrieve(w http.ResponseWriter, r *http.Request) {
 	db := datastore.DBConn()
 
 	vars := mux.Vars(r)
-	pk := vars["id"]
 
-	user := &User{Id: pk}
-	err := db.Select(user)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		fmt.Println("Invalid channel id")
+		return
+	}
+
+	user := &User{Id: id}
+	err = db.Select(user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return

@@ -6,13 +6,19 @@ import (
 	"github.com/nareix/joy4/av/pubsub"
 	"github.com/nareix/joy4/format/rtmp"
 	"strings"
+	"strconv"
 )
 
 func RtmpPublishHandler() func(conn *rtmp.Conn) {
 	return func(conn *rtmp.Conn) {
 		streams, _ := conn.Streams()
 
-		id := strings.Trim(conn.URL.Path, "/")
+		id, err := strconv.Atoi(strings.Trim(conn.URL.Path, "/"))
+		if err != nil {
+			fmt.Println("Invalid channel id")
+			return
+		}
+
 		key := conn.URL.Query().Get("key")
 
 		chb.Lock()
@@ -46,7 +52,11 @@ func RtmpPublishHandler() func(conn *rtmp.Conn) {
 
 func RtmpPlayHandler() func(conn *rtmp.Conn) {
 	return func(conn *rtmp.Conn) {
-		id := strings.Trim(conn.URL.Path, "/")
+		id, err := strconv.Atoi(strings.Trim(conn.URL.Path, "/"))
+		if err != nil {
+			fmt.Println("Invalid channel id")
+			return
+		}
 
 		chb.RLock()
 		ch := chb.channels[id]

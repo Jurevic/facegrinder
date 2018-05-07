@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"strconv"
 )
 
 func List(w http.ResponseWriter, r *http.Request) {
@@ -28,6 +29,10 @@ func List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	for i := range faces {
+		faces[i].Url = "http://localhost:8080/" + faces[i].Url
+	}
+
 	response.JsonResponse(faces, w)
 }
 
@@ -37,7 +42,7 @@ func Retrieve(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	pk := vars["id"]
 
-	userId := r.Context().Value("user_id").(string)
+	userId := r.Context().Value("owner_id").(int)
 
 	face := &Face{Id: pk, OwnerId: userId}
 	err := db.Select(face)
@@ -52,26 +57,29 @@ func Retrieve(w http.ResponseWriter, r *http.Request) {
 func Create(w http.ResponseWriter, r *http.Request) {
 	db := datastore.DBConn()
 
-	userId := r.Context().Value("user_id").(string)
+	userId := r.Context().Value("user_id").(int)
 
 	// Read data
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	var face Face
 	err = json.Unmarshal(data, &face)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	// Decode image
-	dst := "storage/" + userId + "/faces"
-	face.Image, err = uploadImage(face.Image, dst)
+	dst := "storage/" + strconv.Itoa(userId) + "/faces"
+	face.Url, err = uploadImage(face.Url, dst)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	// Requesting user is face owner
@@ -113,6 +121,9 @@ func uploadImage(b64, dst string) (url string, err error) {
 	if err != nil {
 		return
 	}
+
+	// Set url
+	url = dst
 
 	return
 }

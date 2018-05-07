@@ -9,7 +9,7 @@
       <v-layout row wrap>
         <v-flex v-bind="{ [`xs2`]: true }" v-for="item in items" :key="item.name">
           <v-card>
-            <v-card-media :src="item.image" height="300px">
+            <v-card-media :src="item.url" height="300px">
               <v-container fill-height fluid>
                 <v-layout fill-height>
                   <v-flex xs12 align-end flexbox>
@@ -61,20 +61,21 @@
 
     data: () => ({
       dialog: false,
-      items: [
-        { name: 'Me', image: '/static/suspect_2.jpg' },
-        { name: 'Barack Obama', image: '/static/suspect_1.jpg' }
-      ],
+      items: [],
       editedIndex: -1,
       editedItem: {
         name: '',
-        image: ''
+        url: ''
       },
       defaultItem: {
         name: '',
-        image: ''
+        url: ''
       }
     }),
+
+    created () {
+      this.initialize()
+    },
 
     methods: {
       initialize () {
@@ -90,7 +91,7 @@
       },
 
       getUploadedFile (e) {
-        this.editedItem.image = e
+        this.editedItem.url = e
       },
 
       editItem (item) {

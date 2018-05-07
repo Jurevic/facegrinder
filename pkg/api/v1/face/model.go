@@ -5,11 +5,10 @@ import (
 )
 
 type Face struct {
-	Id       string       `json:"id"`
-	OwnerId  string       `json:"-"`
-	Image    string       `json:"image"`
-	Name     string       `json:"name"`
-	Encoding [128]float64 `json:"-"`
+	Id         string       `json:"id"`
+	OwnerId    int          `json:"-"`
+	Url        string       `json:"url"`
+	Name       string       `json:"name"`
 }
 
 // BeforeInsert hook executed before database insert operation.

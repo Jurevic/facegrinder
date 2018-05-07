@@ -6,8 +6,8 @@ import (
 )
 
 type Channel struct {
-	Id      string        `json:"id"`
-	OwnerId string        `json:"-"`
+	Id      int           `json:"id"`
+	OwnerId int           `json:"-"`
 	Name    string        `json:"name"`
 	Key     string        `json:"key"`
 	Que     *pubsub.Queue `json:"-"`
@@ -15,7 +15,7 @@ type Channel struct {
 
 type channelBuffer struct {
 	sync.RWMutex
-	channels map[string]*Channel
+	channels map[int]*Channel
 }
 
 var chb = newChannelBuffer()
@@ -23,11 +23,11 @@ var chb = newChannelBuffer()
 // Channel buffer constructor
 func newChannelBuffer() *channelBuffer {
 	var chb channelBuffer
-	chb.channels = make(map[string]*Channel)
+	chb.channels = make(map[int]*Channel)
 	return &chb
 }
 
-func GetChannelById(id string) *Channel {
+func GetChannelById(id int) *Channel {
 	chb.RLock()
 	ch := chb.channels[id]
 	chb.RUnlock()

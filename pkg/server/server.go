@@ -26,21 +26,21 @@ func Run() {
 
 	r.HandleFunc("/api/version", api.GetVersion).Methods("GET")
 
+	// SIGN UP
+	r.HandleFunc("/api/v1/users/", auth.Create).Methods("POST")
+
+	// STORAGE
+	r.PathPrefix("/storage/").Handler(
+		http.StripPrefix("/storage/", http.FileServer(http.Dir("storage"))))
+
 	// AUTH
 	ar := r.PathPrefix("/api/auth").Subrouter()
 	ar.Methods("POST").Path("/login").HandlerFunc(auth.Login)
 	ar.Methods("POST").Path("/refresh").HandlerFunc(auth.Refresh)
 
-	// SIGN UP
-	r.HandleFunc("/api/v1/users", auth.Create).Methods("POST")
-
 	// Sub route for auth protected views
 	apr := r.PathPrefix("/api/v1").Subrouter()
 	apr.Use(m.AuthMiddleware)
-
-	// STORAGE
-	apr.PathPrefix("/store/").Handler(
-		http.StripPrefix("/store/", http.FileServer(http.Dir("store"))))
 
 	// USERS
 	ur := apr.PathPrefix("/users").Subrouter()

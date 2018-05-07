@@ -11,6 +11,7 @@ import (
 	"log"
 	"github.com/nareix/joy4/format/flv"
 	"github.com/nareix/joy4/av/avutil"
+	"strconv"
 )
 
 type writeFlusher struct {
@@ -24,8 +25,12 @@ func (wf writeFlusher) Flush() error {
 }
 
 func View(w http.ResponseWriter, r *http.Request) {
-	userId := r.Context().Value("user_id").(string)
-	id := mux.Vars(r)["id"]
+	userId := r.Context().Value("user_id").(int)
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	chb.RLock()
 	ch := chb.channels[id]
@@ -52,8 +57,12 @@ func View(w http.ResponseWriter, r *http.Request) {
 }
 
 func Stream(w http.ResponseWriter, r *http.Request) {
-	userId := r.Context().Value("user_id").(string)
-	id := mux.Vars(r)["id"]
+	userId := r.Context().Value("user_id").(int)
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	chb.RLock()
 	ch := chb.channels[id]
@@ -79,7 +88,7 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 }
 
 func List(w http.ResponseWriter, r *http.Request) {
-	userId := r.Context().Value("user_id").(string)
+	userId := r.Context().Value("user_id").(int)
 
 	var userChannels []*Channel
 
@@ -95,7 +104,11 @@ func List(w http.ResponseWriter, r *http.Request) {
 }
 
 func Retrieve(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	chb.RLock()
 	ch := chb.channels[id]
@@ -110,7 +123,7 @@ func Retrieve(w http.ResponseWriter, r *http.Request) {
 }
 
 func Create(w http.ResponseWriter, r *http.Request) {
-	userId := r.Context().Value("user_id").(string)
+	userId := r.Context().Value("user_id").(int)
 
 	var ch Channel
 	err := json.NewDecoder(r.Body).Decode(&ch)
@@ -121,7 +134,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	ch.OwnerId = userId
 
 	chb.RLock()
-	ch.Id = fmt.Sprintf("%d", len(chb.channels)+1)
+	ch.Id = len(chb.channels) + 1
 	chb.channels[ch.Id] = &ch
 	chb.RUnlock()
 

@@ -31,7 +31,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 }
 
 func addUserContext(r *http.Request, claims jwt.MapClaims) *http.Request {
-	ctx := context.WithValue(r.Context(), "user_id", claims["user_id"])
+	ctx := context.WithValue(r.Context(), "user_id", int(claims["user_id"].(float64)))
 	ctx = context.WithValue(ctx, "is_superuser", claims["is_superuser"])
 
 	return r.WithContext(ctx)
