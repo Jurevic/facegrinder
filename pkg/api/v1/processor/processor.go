@@ -9,12 +9,106 @@ import (
 	"strconv"
 	"time"
 	"os/exec"
-	"strings"
+	"github.com/jurevic/facegrinder/pkg/datastore"
+	apiFace "github.com/jurevic/facegrinder/pkg/api/v1/face"
 )
 
-type KnownFace struct {
-	face.Face
-	Name string
+type Initializer interface {
+	Init(map[string]interface{}) error
+}
+
+type ContextInitializer interface {
+	InitCtx(*map[string]interface{}) error
+}
+
+type Closer interface {
+	Close() error
+}
+
+type FrameReader interface {
+	Read() (*gocv.Mat, error)
+}
+
+type FrameProcessor interface {
+	Process(*gocv.Mat) error
+}
+
+type ProcessingChain struct {
+	Input FrameReader
+	Processors []FrameProcessor
+	ChainContext map[string]interface{}
+}
+
+func (o ProcessingChain) Init(params map[string]interface{}) (err error) {
+	o.ChainContext = make(map[string]interface{})
+
+	ini, ok := o.Input.(Initializer)
+	if ok {
+		err = ini.Init(params)
+		if err != nil {
+			return err
+		}
+	}
+
+	for i := range o.Processors{
+		ini, ok = o.Processors[i].(Initializer)
+		if ok {
+			err = ini.Init(params)
+			if err != nil {
+				return err
+			}
+		}
+
+		ctxini, ok := o.Processors[i].(ContextInitializer)
+		if ok {
+			ctxini.InitCtx(&o.ChainContext)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return
+}
+
+func (o ProcessingChain) Close() (err error) {
+	ini, ok := o.Input.(Closer)
+	if ok {
+		err = ini.Close()
+		if err != nil {
+			return err
+		}
+	}
+
+	for i := range o.Processors{
+		ini, ok = o.Processors[i].(Closer)
+		if ok {
+			err = ini.Close()
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return
+}
+
+func (o ProcessingChain) Run() (err error) {
+	for {
+		frame, err := o.Input.Read()
+		if err != nil {
+			return err
+		}
+
+		for i := range o.Processors{
+			err = o.Processors[i].Process(frame)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return
 }
 
 var faceRec *face.Recognizer
@@ -25,16 +119,23 @@ var processThisFrame int
 var faces []face.Face
 var matches []int
 
-func InitKnownFaces() {
-	knownFaces, err := faceRec.RecognizeFile("fe/static/suspect_2.jpg")
+func InitKnownFaces(userId int) {
+	db := datastore.DBConn()
+
+	var faces []apiFace.Face
+	err := db.Model(&faces).Where("owner_id = ?", userId).Select()
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 
 	var descriptors []face.Descriptor
-	for i := range knownFaces {
-		descriptors = append(descriptors, knownFaces[i].Descriptor)
+	for i := range faces {
+		knownFace, err := faceRec.RecognizeSingleFile(faces[i].Url)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		descriptors = append(descriptors, knownFace.Descriptor)
 	}
 
 	faceRec.SetSamples(descriptors)
@@ -79,6 +180,7 @@ func ProcessFromCam() error {
 
 	// Open view window
 	window := gocv.NewWindow("Test")
+	defer window.Close()
 
 	// Init frame
 	frame := gocv.NewMat()
@@ -124,28 +226,30 @@ func ProcessFromRtmpChannel() error {
 	}
 	defer stream.Close()
 
-	params := []string{"-y",
-		"-f", "rawvideo",
-		"-vcodec", "rawvideo",
-		"-pix_fmt", "bgr24",
-		"-s", "1280x720",
-		"-i", "-",
-		"-c:v", "libx264",
-		"-pix_fmt", "yuv420p",
-		"-preset", "ultrafast",
-		"-f", "flv",
-		"rtmp://0.0.0.0/2?key=password"}
-
-	proc := exec.Command("ffmpeg", strings.Join(params, " "))
-	pipe, _ := proc.StdinPipe()
-	defer pipe.Close()
-	proc.Start()
+	//output RTMP stream
+	//params := []string{"-y",
+	//	"-f", "rawvideo",
+	//	"-vcodec", "rawvideo",
+	//	"-pix_fmt", "bgr24",
+	//	"-s", "1280x720",
+	//	"-i", "-",
+	//	"-c:v", "libx264",
+	//	"-pix_fmt", "yuv420p",
+	//	"-preset", "ultrafast",
+	//	"-f", "flv",
+	//	"rtmp://0.0.0.0/2?key=password"}
+	//
+	//proc := exec.Command("ffmpeg", strings.Join(params, " "))
+	//pipe, _ := proc.StdinPipe()
+	//defer pipe.Close()
+	//proc.Start()
 
 	// Reduce buffer size as large buffer introduces large delay
-	stream.Set(gocv.VideoCaptureBufferSize, 5)
+	// stream.Set(gocv.VideoCaptureBufferSize, 5)
 
 	// Open view window
 	window := gocv.NewWindow("Test")
+	defer window.Close()
 
 	// Init frame
 	frame := gocv.NewMat()
@@ -170,13 +274,16 @@ func ProcessFromRtmpChannel() error {
 		}
 
 		// Process frame
-		ProcessFrame(&frame, 1, 10)
+		ProcessFrame(&frame, 1, 30)
 
 		// Output frame
-		pipe.Write(frame.ToBytes())
+		// pipe.Write(frame.ToBytes())
 
 		// show the image in the window, and wait 1 millisecond
 		window.IMShow(frame)
+		if window.WaitKey(1) >= 0 {
+			break
+		}
 	}
 
 	return nil

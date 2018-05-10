@@ -98,7 +98,6 @@
           techOrder: ['flash'],
           sources: [{
             type: 'rtmp/flv',
-            // src: 'rtmp://0.0.0.0/api/v1/channels/1/stream'
             src: 'rtmp://localhost/1'
           }]
         },

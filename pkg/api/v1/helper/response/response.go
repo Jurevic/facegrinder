@@ -16,3 +16,7 @@ func JsonResponse(response interface{}, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(data)
 }
+
+func NoContent(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusNoContent)
+}
