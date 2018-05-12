@@ -30,6 +30,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := range faces {
+		// FixMe: hardcoded url
 		faces[i].Url = "http://localhost:8080/" + faces[i].Url
 	}
 
@@ -42,7 +43,7 @@ func Retrieve(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	pk := vars["id"]
 
-	userId := r.Context().Value("owner_id").(int)
+	userId := r.Context().Value("user_id").(int)
 
 	face := &Face{Id: pk, OwnerId: userId}
 	err := db.Select(face)

@@ -19,7 +19,8 @@ export const store = new Vuex.Store({
       users: 'http://0.0.0.0:8080/api/v1/users/',
       faces: 'http://0.0.0.0:8080/api/v1/faces/',
       channels: 'http://0.0.0.0:8080/api/v1/channels/',
-      processors: 'http://0.0.0.0:8080/api/v1/processors/'
+      processors: 'http://0.0.0.0:8080/api/v1/processors/',
+      processor_choices: 'http://0.0.0.0:8080/api/v1/processors/choices/'
     }
   },
   mutations: {

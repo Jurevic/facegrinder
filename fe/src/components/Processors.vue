@@ -17,7 +17,9 @@
   export default {
     methods: {
       runProcessor () {
-        axios.get(this.$store.state.endpoints.processors, {
+        let id = 1
+
+        axios.get(this.$store.state.endpoints.processors + id + '/run/', {
           headers: {
             Authorization: this.$store.state.jwt
           }

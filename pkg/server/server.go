@@ -19,6 +19,7 @@ func Run() {
 	auth.Init()
 	rtmp_server.Init()
 	datastore.Init()
+	processor.Init()
 	defer datastore.Close()
 
 	r := mux.NewRouter().StrictSlash(true)
@@ -75,6 +76,9 @@ func Run() {
 	pr.Methods("POST").Path("/").HandlerFunc(processor.Create)
 	pr.Methods("PUT").Path("/{id}").HandlerFunc(processor.Update)
 	pr.Methods("DELETE").Path("/{id}").HandlerFunc(processor.Delete)
+
+	pr.Methods("GET").Path("/choices/").HandlerFunc(processor.ListChoices)
+	pr.Methods("GET").Path("/{id}/run/").HandlerFunc(processor.Run)
 
 	// CORS
 	handler := cors.AllowAll().Handler(r)
