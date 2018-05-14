@@ -14,13 +14,7 @@ import { store } from './store'
 
 Vue.use(Vuetify)
 Vue.use(VueAxios, axios)
-
-// import 'vue-video-player/src/custom-theme.css'
-
-Vue.use(VueVideoPlayer /* {
-  options: global default options,
-  events: global videojs events
-} */)
+Vue.use(VueVideoPlayer)
 
 Vue.config.productionTip = false
 
@@ -30,4 +24,17 @@ new Vue({
   router,
   store,
   render: h => h(App)
+})
+
+// Request interceptor
+axios.interceptors.request.use(function (config) {
+  const token = store.state.jwt
+
+  if (token != null) {
+    config.headers.Authorization = `${token}`
+  }
+
+  return config
+}, function (err) {
+  return Promise.reject(err)
 })

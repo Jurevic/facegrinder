@@ -1,5 +1,4 @@
 import router from '../router'
-import axios from 'axios'
 
 const API_URL = 'http://0.0.0.0:8080/'
 const LOGIN_URL = API_URL + 'api/v1/auth/login'
@@ -22,7 +21,7 @@ export default {
       default:
         url = LOGIN_URL
     }
-    axios.post(url, creds)
+    this.$http.post(url, creds)
       .then((response) => {
         localStorage.setItem('api_token', response.data.api_token)
 

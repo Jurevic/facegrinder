@@ -49,11 +49,13 @@
         alert: false
       }
     },
+
     methods: {
       userSignIn () {
         this.$store.dispatch('userSignIn', { email: this.email, password: this.password })
       }
     },
+
     computed: {
       error () {
         return this.$store.state.error
@@ -62,6 +64,7 @@
         return this.$store.state.loading
       }
     },
+
     watch: {
       error (value) {
         if (value) {

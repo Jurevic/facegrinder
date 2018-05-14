@@ -20,9 +20,11 @@ export const store = new Vuex.Store({
       faces: 'http://0.0.0.0:8080/api/v1/faces/',
       channels: 'http://0.0.0.0:8080/api/v1/channels/',
       processors: 'http://0.0.0.0:8080/api/v1/processors/',
-      processor_choices: 'http://0.0.0.0:8080/api/v1/processors/choices/'
-    }
+      processorChoices: 'http://0.0.0.0:8080/api/v1/processors/choices/'
+    },
+    processorChoices: []
   },
+
   mutations: {
     setUser (state, payload) {
       state.user = payload
@@ -40,8 +42,12 @@ export const store = new Vuex.Store({
     },
     setLoading (state, payload) {
       state.loading = payload
+    },
+    setProcessorChoices (state, payload) {
+      state.processorChoices = payload
     }
   },
+
   actions: {
     refreshToken ({commit, state}) {
       const payload = {
@@ -56,6 +62,7 @@ export const store = new Vuex.Store({
           console.log(error)
         })
     },
+
     inspectToken ({actions}) {
       const token = this.state.jwt
       if (token) {
@@ -73,6 +80,7 @@ export const store = new Vuex.Store({
         }
       }
     },
+
     userSignUp ({commit, state}, payload) {
       commit('setLoading', true)
       axios.post(state.endpoints.users, payload)
@@ -86,6 +94,7 @@ export const store = new Vuex.Store({
           commit('setLoading', false)
         })
     },
+
     userSignIn ({commit, state}, payload) {
       commit('setLoading', true)
       axios.post(state.endpoints.obtainJWT, payload)
@@ -101,12 +110,14 @@ export const store = new Vuex.Store({
           commit('setLoading', false)
         })
     },
+
     userSignOut ({commit}) {
       commit('setUser', null)
       commit('clearToken')
       router.push('/')
     }
   },
+
   getters: {
     isAuthenticated (state) {
       return state.user !== null && state.user !== undefined && state.jwt !== null && state.jwt !== undefined

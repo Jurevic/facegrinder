@@ -25,7 +25,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 
 	err := db.Model(&faces).Select()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		response.JsonResponse(make([]string, 0), w)
 		return
 	}
 

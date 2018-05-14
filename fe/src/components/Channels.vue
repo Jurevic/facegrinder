@@ -84,8 +84,6 @@
 
 
 <script>
-  import axios from 'axios'
-
   export default {
     data () {
       return {
@@ -150,11 +148,7 @@
       },
 
       initialize () {
-        axios.get(this.$store.state.endpoints.channels, {
-          headers: {
-            Authorization: this.$store.state.jwt
-          }
-        }).then((response) => {
+        this.$http.get(this.$store.state.endpoints.channels).then((response) => {
           this.items = response.data
         }).catch((error) => {
           console.log(error)
@@ -181,11 +175,7 @@
       },
 
       save () {
-        axios.post(this.$store.state.endpoints.channels, this.editedItem, {
-          headers: {
-            Authorization: this.$store.state.jwt
-          }
-        }).then((response) => {
+        this.$http.post(this.$store.state.endpoints.channels, this.editedItem).then((response) => {
           if (this.editedIndex > -1) {
             Object.assign(this.items[this.editedIndex], response.data)
           } else {
