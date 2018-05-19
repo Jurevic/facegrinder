@@ -6,7 +6,7 @@ import (
 )
 
 type Camera struct {
-	cam *gocv.VideoCapture
+	cam   *gocv.VideoCapture
 	frame gocv.Mat
 }
 
@@ -43,5 +43,9 @@ func (o *Camera) Read() (frame *gocv.Mat, err error) {
 
 	frame = &o.frame
 
+	return
+}
+
+func (o *Camera) Process(frame *gocv.Mat) (err error) {
 	return
 }

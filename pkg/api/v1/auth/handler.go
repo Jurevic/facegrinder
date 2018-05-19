@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"strconv"
 	"fmt"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor"
 )
 
 type UserCredentials struct {
@@ -194,6 +195,9 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
+	// Create defaults
+	processor.CreateDefault(user.Id)
 
 	response.JsonResponse(user, w)
 }

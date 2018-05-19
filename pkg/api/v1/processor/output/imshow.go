@@ -6,13 +6,27 @@ import (
 )
 
 type IMShow struct {
+	Label string `json:"label"`
+
 	window *gocv.Window
 }
 
-func (o *IMShow) Init(params map[string]interface{}) (err error) {
-	name := params["name"].(string)
+func (o *IMShow) Default() (err error) {
+	o.Label= "Result"
 
-	o.window = gocv.NewWindow(name)
+	return
+}
+
+func (o *IMShow) Init(params map[string]interface{}) (err error) {
+	if label, ok := params["label"]; ok {
+		o.Label, ok = label.(string)
+		if !ok {
+			err = errors.New("label is not string type")
+			return err
+		}
+	}
+
+	o.window = gocv.NewWindow(o.Label)
 
 	return
 }

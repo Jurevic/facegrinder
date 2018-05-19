@@ -54,12 +54,11 @@ func Run() {
 	cr := apr.PathPrefix("/channels").Subrouter()
 	cr.Methods("GET").Path("/").HandlerFunc(channel.List)
 	cr.Methods("GET").Path("/{id}").HandlerFunc(channel.Retrieve)
+	cr.Methods("GET").Path("/{id}/view").HandlerFunc(channel.View)
+	cr.Methods("GET").Path("/{id}/stream").HandlerFunc(channel.Stream)
 	cr.Methods("POST").Path("/").HandlerFunc(channel.Create)
 	cr.Methods("PUT").Path("/{id}").HandlerFunc(channel.Update)
 	cr.Methods("DELETE").Path("/{id}").HandlerFunc(channel.Delete)
-
-	cr.Methods("GET").Path("/{id}/view").HandlerFunc(channel.View)
-	cr.Methods("GET").Path("/{id}/stream").HandlerFunc(channel.Stream)
 
 	// FACES
 	fr := apr.PathPrefix("/faces").Subrouter()
@@ -72,13 +71,12 @@ func Run() {
 	// PROCESSORS
 	pr := apr.PathPrefix("/processors").Subrouter()
 	pr.Methods("GET").Path("/").HandlerFunc(processor.List)
+	pr.Methods("GET").Path("/choices/").HandlerFunc(processor.ListChoices)
 	pr.Methods("GET").Path("/{id}").HandlerFunc(processor.Retrieve)
+	pr.Methods("GET").Path("/{id}/run").HandlerFunc(processor.Run)
 	pr.Methods("POST").Path("/").HandlerFunc(processor.Create)
 	pr.Methods("PUT").Path("/{id}").HandlerFunc(processor.Update)
 	pr.Methods("DELETE").Path("/{id}").HandlerFunc(processor.Delete)
-
-	pr.Methods("GET").Path("/choices/").HandlerFunc(processor.ListChoices)
-	pr.Methods("GET").Path("/{id}/run/").HandlerFunc(processor.Run)
 
 	// CORS
 	handler := cors.AllowAll().Handler(r)

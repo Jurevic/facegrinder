@@ -7,7 +7,7 @@ import (
 
 type Rtmp struct {
 	stream *gocv.VideoCapture
-	frame gocv.Mat
+	frame  gocv.Mat
 }
 
 func (o *Rtmp) Init(params map[string]interface{}) (err error) {
@@ -45,5 +45,9 @@ func (o *Rtmp) Read() (frame *gocv.Mat, err error) {
 
 	frame = &o.frame
 
+	return
+}
+
+func (o *Rtmp) Process(frame *gocv.Mat) (err error) {
 	return
 }

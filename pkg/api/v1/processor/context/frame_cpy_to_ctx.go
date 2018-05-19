@@ -1,18 +1,31 @@
 package context
 
 import (
+	"errors"
 	"gocv.io/x/gocv"
 )
 
 type FrameCpyToCtx struct {
-	Key string
+	Key string `json:"key"`
 
-	frame gocv.Mat
+	frame   gocv.Mat
 	context *map[string]interface{}
 }
 
+func (o *FrameCpyToCtx) Default() (err error) {
+	o.Key = "frame_1"
+
+	return
+}
+
 func (o *FrameCpyToCtx) Init(params map[string]interface{}) (err error) {
-	o.Key = params["key"].(string)
+	if key, ok := params["key"]; ok {
+		o.Key, ok = key.(string)
+		if !ok {
+			err = errors.New("key is not string type")
+			return err
+		}
+	}
 
 	return
 }

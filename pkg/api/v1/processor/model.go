@@ -3,7 +3,7 @@ package processor
 import "github.com/go-pg/pg/orm"
 
 type ProcessingNode struct {
-	Type   string                 `json:"type"`
+	Key    string                 `json:"key"`
 	Params map[string]interface{} `json:"params"`
 }
 
@@ -11,7 +11,7 @@ type Processor struct {
 	Id         string           `json:"id"`
 	OwnerId    int              `json:"-"`
 	Name       string           `json:"name"`
-	Processors []ProcessingNode `json:"processors"`
+	Nodes      []ProcessingNode `json:"nodes"`
 }
 
 // BeforeInsert hook executed before database insert operation.

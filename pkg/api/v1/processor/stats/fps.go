@@ -2,7 +2,6 @@ package stats
 
 import (
 	"fmt"
-	"github.com/mcuadros/go-defaults"
 	"gocv.io/x/gocv"
 	"image"
 	"image/color"
@@ -33,8 +32,6 @@ func (o *Fps) Default() (err error) {
 }
 
 func (o *Fps) Init(params map[string]interface{}) (err error) {
-	defaults.SetDefaults(o)
-
 	o.t = time.Now()
 	o.frames = 0
 

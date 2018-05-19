@@ -1,24 +1,28 @@
 package transform
 
 import (
+	"errors"
 	"gocv.io/x/gocv"
 	"image"
-	"errors"
 )
 
 type Resizer struct {
-	Scale float64
+	Scale float64 `json:"scale"`
+}
+
+func (o *Resizer) Default() (err error) {
+	o.Scale = 1
+
+	return
 }
 
 func (o *Resizer) Init(params map[string]interface{}) (err error) {
-	scale := params["scale"]
-	switch scale.(type) {
-	case int:
-		o.Scale = float64(scale.(int))
-	case float64:
-		o.Scale = scale.(float64)
-	default:
-		return errors.New("scale is neither int nor float")
+	if scale, ok := params["scale"]; ok {
+		o.Scale, ok = scale.(float64)
+		if !ok {
+			err = errors.New("scale is not float type")
+			return err
+		}
 	}
 
 	return

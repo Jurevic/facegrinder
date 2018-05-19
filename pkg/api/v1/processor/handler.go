@@ -63,31 +63,14 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Requesting user is face owner
+	// Requesting user is processor owner
 	processor.OwnerId = userId
 
-	// Create face
+	// Create processor
 	err = db.Insert(&processor)
 	if err != nil {
 		panic(err)
 	}
-
-	//var chain ProcessingChain
-	//
-	//chain.Processors = make([]FrameProcessor, len(processor))
-	//
-	//for i := range processors {
-	//	defaultProcessor := ProcessorsMap[processors[i].Type]
-	//	newProcessor := deepcopy.Copy(defaultProcessor)
-	//
-	//	ini, ok := newProcessor.(Initializer)
-	//	if ok {
-	//		err = ini.Init(processors[i].Params)
-	//		if err != nil {
-	//			return
-	//		}
-	//	}
-	//}
 
 	response.JsonResponse(processor, w)
 }
@@ -109,42 +92,30 @@ func ListChoices(w http.ResponseWriter, r *http.Request) {
 }
 
 func Run(w http.ResponseWriter, r *http.Request) {
-	//userId := r.Context().Value("user_id").(int)
+	db := datastore.DBConn()
 
-	//var chain ProcessingChain
+	vars := mux.Vars(r)
+	pk := vars["id"]
 
-	//chain.Input = new(input.Camera)
+	userId := r.Context().Value("user_id").(int)
 
-	//chain.Processors = make([]FrameProcessor, 2)
-	//chain.Processors[0] = new(stats.Fps)
-	//chain.Processors[1] = new(output.IMShow)
-	//
-	//params := make(map[string]interface{})
-	//
-	//params["scale"] = 2.0
-	//params["name"] = "Test"
-	//
-	//params["user_id"] = 1
-	//params["jitter"] = 1
-	//params["threshold"] = 0.6
-	//params["refresh_interval"] = 1
-	//params["font_size"] = 2
-	//params["font_thickness"] = 1
-	//params["box_thickness"] = 1
-	//params["x"] = 100
-	//params["y"] = 100
-	//params["color"] = "R:255 G:0 B:0 A:0"
-	//
-	//params["key"] = "frame"
-	//
-	//chain.Init(params)
-	//chain.Run()
-	//defer chain.Close()
+	processor := &Processor{Id: pk, OwnerId: userId}
+	err := db.Select(processor)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
 
-	//InitFacePredictor()
-	//InitKnownFaces(userId)
-	//ProcessFromRtmpChannel()
-	// ProcessFromCam()
+	chain := new(ProcessingChain)
+
+	err = chain.Init(processor)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer chain.Close()
+
+	chain.Run()
 
 	response.NoContent(w)
 }

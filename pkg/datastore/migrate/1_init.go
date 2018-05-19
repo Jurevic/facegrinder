@@ -11,7 +11,7 @@ CREATE TABLE processors (
 id serial NOT NULL,
 owner_id integer NOT NULL,
 name text NOT NULL,
-processors jsonb,
+nodes jsonb,
 PRIMARY KEY (id),
 FOREIGN KEY (owner_id) REFERENCES users(id)
 )`

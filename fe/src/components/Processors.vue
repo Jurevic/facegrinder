@@ -54,14 +54,14 @@
         <v-flex>
         </v-flex>
         <v-flex xs6>
-          <v-flex class="text-xs-center">
+          <v-flex class="text-xs-center" pa-3>
             <h1>{{selectedItem.name}}</h1>
           </v-flex>
-          <v-layout column v-for="(item, index) in selectedItem.processors" :key="item.name">
+          <v-layout column v-for="(item, index) in selectedItem.nodes" :key="item.key">
             <v-flex>
               <v-card>
                 <v-card-title>
-                  <span class="headline">{{getElemName(item.type)}}</span>
+                  <span class="headline">{{getElemName(item.key)}}</span>
                 </v-card-title>
                 <v-card-media :src="item.url">
                   <v-container fill-height fluid>
@@ -86,8 +86,8 @@
             <v-flex class="text-xs-center">
               <div align="center">
                 <v-dialog v-model="elemDialog" max-width="500px">
-                  <v-btn icon large slot="activator" v-if="index == items.length - 1"><v-icon>arrow_downward</v-icon></v-btn>
-                  <v-btn icon fab large slot="activator" v-if="index != items.length - 1"><v-icon>add</v-icon></v-btn>
+                  <v-btn icon large slot="activator" v-if="index !== selectedItem.nodes.length - 1"><v-icon>arrow_downward</v-icon></v-btn>
+                  <v-btn icon fab large slot="activator" v-if="index === selectedItem.nodes.length - 1"><v-icon>add</v-icon></v-btn>
                   <v-card>
                     <v-card-title>
                       <span class="headline">Add element</span>
@@ -162,11 +162,11 @@
       selectedElemKey: '',
       editedItem: {
         name: '',
-        processors: []
+        nodes: []
       },
       selectedItem: {
         name: '',
-        processors: []
+        nodes: []
       }
     }),
 
@@ -228,9 +228,7 @@
       },
 
       runProcessor () {
-        let id = 1
-
-        this.$http.get(this.$store.state.endpoints.processors + id + '/run/').catch(error => {
+        this.$http.get(this.$store.state.endpoints.processors + this.selectedItem.id + '/run').catch(error => {
           console.log(error)
         })
       },

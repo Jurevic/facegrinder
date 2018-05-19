@@ -4,11 +4,43 @@ import (
 	"github.com/jurevic/facegrinder/pkg/api/v1/processor/stats"
 	"reflect"
 	"strings"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/input"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/output"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/feature"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/transform"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/context"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/draw"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/color"
 )
 
 // Register your processor here
 var ProcessorsList = []ListEntry{
+	// Stats
 	{Key: "stats_fps", Name: "FPS counter", Processor: new(stats.Fps)},
+
+	// Input
+	{Key: "input_rtmp", Name: "Read from channel", Processor: new(input.Rtmp)},
+	{Key: "input_cam", Name: "Read from camera", Processor: new(input.Camera)},
+
+	// Output
+	//{Key: "output_rtmp", Name: "Channel reader", Processor: new(output.Rtmp)},
+	{Key: "output_imshow", Name: "Output to window", Processor: new(output.IMShow)},
+
+	// Feature extraction
+	{Key: "face_recogniser", Name: "Recognise faces", Processor: new(feature.RecogniseFaces)},
+
+	// Draw
+	{Key: "label_faces", Name: "Label faces", Processor: new(draw.LabeledBoxes)},
+
+	// Color
+	{Key: "rgba_to_bgr", Name: "Color RGBA to BGR", Processor: new(color.RGBAToBGR)},
+
+	// Transform
+	{Key: "resize", Name: "Resize", Processor: new(transform.Resizer)},
+
+	// Context
+	{Key: "cpy_to_ctx", Name: "Copy to context", Processor: new(context.FrameCpyToCtx)},
+	{Key: "load_from_ctx", Name: "Load from context", Processor: new(context.FrameLoadFromCtx)},
 }
 
 type ListEntry struct {
@@ -21,7 +53,7 @@ var ProcessorsMap map[string]MapEntry
 
 type MapEntry struct {
 	Name        string            `json:"name"`
-	Params      interface{}       `json:"params"`
+	Default     interface{}       `json:"default"`
 	Types       map[string]string `json:"types"`
 	IsReader    bool              `json:"is_reader"`
 	IsProcessor bool              `json:"is_processor"`
@@ -43,7 +75,7 @@ func InitProcessorsMap() {
 
 		e := MapEntry{
 			Name:        name,
-			Params:      processor,
+			Default:     processor,
 			Types:       types,
 			IsReader:    isFrameReader(processor),
 			IsProcessor: isFrameProcessor(processor),
