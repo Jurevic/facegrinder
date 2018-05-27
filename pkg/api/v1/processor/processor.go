@@ -1,9 +1,9 @@
 package processor
 
 import (
-	"gocv.io/x/gocv"
-	"github.com/mohae/deepcopy"
 	"errors"
+	"github.com/mohae/deepcopy"
+	"gocv.io/x/gocv"
 )
 
 type Initializer interface {
@@ -31,8 +31,9 @@ type FrameProcessor interface {
 }
 
 type ProcessingChain struct {
+	UserId          int
 	ProcessingNodes []FrameProcessor
-	ChainContext map[string]interface{}
+	ChainContext    map[string]interface{}
 }
 
 func (o *ProcessingChain) Init(p *Processor) (err error) {
@@ -50,6 +51,9 @@ func (o *ProcessingChain) Init(p *Processor) (err error) {
 			err = errors.New("node does not implement frame processor interface")
 			return err
 		}
+
+		// Default params
+		p.Nodes[i].Params["user_id"] = o.UserId
 
 		// Initialize node
 		err = initNode(newNode, p.Nodes[i].Params)
@@ -71,7 +75,7 @@ func (o *ProcessingChain) Init(p *Processor) (err error) {
 }
 
 func (o *ProcessingChain) Close() (err error) {
-	for i := range o.ProcessingNodes{
+	for i := range o.ProcessingNodes {
 		ini, ok := o.ProcessingNodes[i].(Closer)
 		if ok {
 			err = ini.Close()
@@ -131,7 +135,6 @@ func initNodeCtx(n interface{}, ref *map[string]interface{}) (err error) {
 
 	return
 }
-
 
 func processRead(n interface{}) (mat *gocv.Mat, err error) {
 	p, ok := n.(FrameReader)

@@ -10,7 +10,7 @@
       </v-list>
       <v-list class="pa-1">
         <v-divider></v-divider>
-        <v-list-tile v-for="item in items" :key="item.name" @click="">
+        <v-list-tile v-for="(item, index) in items" :key="item.name" @click="selected(index)">
           <v-list-tile-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-action>
@@ -161,10 +161,12 @@
       editedElem: {},
       selectedElemKey: '',
       editedItem: {
+        id: null,
         name: '',
         nodes: []
       },
       selectedItem: {
+        id: null,
         name: '',
         nodes: []
       }
@@ -225,6 +227,10 @@
 
       save () {
         this.dialog = false
+      },
+
+      selected (index) {
+        this.selectedItem = this.items[index]
       },
 
       runProcessor () {

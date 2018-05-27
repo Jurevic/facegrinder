@@ -20,7 +20,7 @@ const facesTable = `
 CREATE TABLE faces (
 id serial NOT NULL,
 owner_id integer NOT NULL,
-path text NOT NULL,
+url text NOT NULL,
 name text NOT NULL,
 PRIMARY KEY (id),
 FOREIGN KEY (owner_id) REFERENCES users(id)

@@ -18,8 +18,8 @@ import (
 func Run() {
 	auth.Init()
 	rtmp_server.Init()
-	datastore.Init()
 	processor.Init()
+	datastore.Init()
 	defer datastore.Close()
 
 	r := mux.NewRouter().StrictSlash(true)

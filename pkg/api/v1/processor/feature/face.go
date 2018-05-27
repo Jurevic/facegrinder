@@ -68,7 +68,8 @@ func (o *RecogniseFaces) Init(params map[string]interface{}) (err error) {
 		return err
 	}
 
-	//o.initKnownFaces(userId)
+	userId := params["user_id"].(int)
+	o.initKnownFaces(userId)
 
 	return
 }
@@ -96,7 +97,12 @@ func (o *RecogniseFaces) Process(frame *gocv.Mat) (err error) {
 		for i := range o.faces {
 			o.boxes[i] = draw.LabeledBox{
 				Rectangle: o.faces[i].Rectangle,
-				Label:     "test",
+
+			}
+
+			o.boxes[i].Label = ""
+			if o.matches[i] >= 0 {
+				o.boxes[i].Label = "suspect"
 			}
 		}
 

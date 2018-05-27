@@ -19,6 +19,7 @@ type LabeledBoxes struct {
 	FontThickness int        `json:"font_thickness"`
 	FontSize      float64    `json:"font_size"`
 	Color         color.RGBA `json:"color"`
+	MatchColor    color.RGBA `json:"match_color"`
 	Scale         float64    `json:"scale"`
 
 	context *map[string]interface{}
@@ -29,7 +30,8 @@ func (o *LabeledBoxes) Default() (err error) {
 	o.BoxThickness = 1
 	o.FontThickness = 1
 	o.FontSize = 1
-	o.Color = color.RGBA{R: 255, G: 0, B: 0, A: 0}
+	o.Color = color.RGBA{R: 0, G: 0, B: 0, A: 0}
+	o.MatchColor = color.RGBA{R: 255, G: 0, B: 0, A: 0}
 	o.Scale = 1
 
 	return
@@ -101,12 +103,12 @@ func (o *LabeledBoxes) Process(frame *gocv.Mat) (err error) {
 
 	for i := range boxes {
 		// Name and color
-		//if matches[i] < 0 {
-		//	frameColor = color.RGBA{R: 0, G: 255, B: 0, A: 0}
-		//} else {
-		//	frameColor = color.RGBA{R: 255, G: 0, B: 0, A: 0}
-		//	text = strconv.Itoa(matches[i])
-		//}
+		boxColor := o.Color
+		label := ""
+		if boxes[i].Label != "" {
+			boxColor = o.MatchColor
+			label = boxes[i].Label
+		}
 
 		rectangle := boxes[i].Rectangle
 
@@ -120,10 +122,10 @@ func (o *LabeledBoxes) Process(frame *gocv.Mat) (err error) {
 		}
 
 		// Draw rectangle around face
-		gocv.Rectangle(frame, rectangle, o.Color, o.BoxThickness)
+		gocv.Rectangle(frame, rectangle, boxColor, o.BoxThickness)
 
 		// Draw a label
-		gocv.PutText(frame, boxes[i].Label, rectangle.Min, gocv.FontHersheyDuplex, o.FontSize, o.Color, o.FontThickness)
+		gocv.PutText(frame, label, rectangle.Min, gocv.FontHersheyDuplex, o.FontSize, boxColor, o.FontThickness)
 	}
 
 	return

@@ -5,11 +5,12 @@ import (
 )
 
 type Face struct {
-	Id         string       `json:"id"`
-	OwnerId    int          `json:"-"`
-	Url        string       `json:"url"`
-	Name       string       `json:"name"`
+	Id      string `json:"id"`
+	OwnerId int    `json:"-"`
+	Url     string `json:"url"`
+	Name    string `json:"name"`
 }
+
 
 // BeforeInsert hook executed before database insert operation.
 func (i *Face) BeforeInsert(db orm.DB) error {

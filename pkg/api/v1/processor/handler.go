@@ -108,6 +108,10 @@ func Run(w http.ResponseWriter, r *http.Request) {
 
 	chain := new(ProcessingChain)
 
+	// Link chain to user
+	chain.UserId = userId
+
+	// Initialise chain
 	err = chain.Init(processor)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
