@@ -11,7 +11,7 @@ storage/
 fe/build/
 .DS_Store
 fe/node_modules/
-/dist/
+fe/dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

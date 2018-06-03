@@ -1,44 +1,21 @@
 package datastore
 
 import (
-	"os"
 	"github.com/go-pg/pg"
-)
-
-
-const (
-	dbaddr = "DBADDR"
-	dbuser = "DBUSER"
-	dbpass = "DBPASS"
-	dbname = "DBNAME"
+	"github.com/spf13/viper"
 )
 
 func dbConfig() *pg.Options {
-	addr, ok := os.LookupEnv(dbaddr)
-	if !ok {
-		panic("DBADDR environment variable required but not set")
-	}
-
-	user, ok := os.LookupEnv(dbuser)
-	if !ok {
-		panic("DBUSER environment variable required but not set")
-	}
-
-	password, ok := os.LookupEnv(dbpass)
-	if !ok {
-		panic("DBPASS environment variable required but not set")
-	}
-
-	name, ok := os.LookupEnv(dbname)
-	if !ok {
-		panic("DBNAME environment variable required but not set")
-	}
+	addr := viper.GetString("db_address")
+	user := viper.GetString("db_username")
+	password := viper.GetString("db_password")
+	name := viper.GetString("db_name")
 
 	options := pg.Options{
-		Addr:addr,
-		User:user,
-		Password:password,
-		Database:name,
+		Addr:     addr,
+		User:     user,
+		Password: password,
+		Database: name,
 	}
 
 	return &options

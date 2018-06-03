@@ -19,6 +19,6 @@ func Close() {
 	db.Close()
 }
 
-func DBConn() (*pg.DB){
+func DBConn() *pg.DB {
 	return db
 }

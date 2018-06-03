@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:10.1-alpine
+    environment:
+     - POSTGRES_USER=facegrinder
+     - POSTGRES_PASSWORD=changethispassword
+     - POSTGRES_DB=facegrinder_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432"
+
+  app:
+    build: .
+    environment:
+      - FG_DB_USERNAME=facegrinder
+      - FG_DB_PASSWORD=changethispassword
+      - FG_DB_NAME=facegrinder_db
+      - FG_DB_ADDR=db:5432
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  db-data:

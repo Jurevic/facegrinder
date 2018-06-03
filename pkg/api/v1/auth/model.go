@@ -7,17 +7,17 @@ import (
 )
 
 type User struct {
-	Id          int       `json:"id"`
-	Password    []byte    `json:"-"`
-	Email       string    `json:"email"`
-	Name        string    `json:"name"`
+	Id       int    `json:"id"`
+	Password []byte `json:"-"`
+	Email    string `json:"email"`
+	Name     string `json:"name"`
 
-	IsSuperuser bool      `json:"is_superuser"`
-	IsActive    bool      `json:"is_active"`
+	IsSuperuser bool `json:"is_superuser"`
+	IsActive    bool `json:"is_active"`
 
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at,omitempty"`
-	LastLogin   time.Time `json:"last_login,omitempty"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	LastLogin time.Time `json:"last_login,omitempty"`
 }
 
 // BeforeInsert hook executed before database insert operation.

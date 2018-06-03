@@ -8,10 +8,10 @@ type ProcessingNode struct {
 }
 
 type Processor struct {
-	Id         string           `json:"id"`
-	OwnerId    int              `json:"-"`
-	Name       string           `json:"name"`
-	Nodes      []ProcessingNode `json:"nodes"`
+	Id      string           `json:"id"`
+	OwnerId int              `json:"-"`
+	Name    string           `json:"name"`
+	Nodes   []ProcessingNode `json:"nodes"`
 }
 
 // BeforeInsert hook executed before database insert operation.

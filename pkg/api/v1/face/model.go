@@ -11,7 +11,6 @@ type Face struct {
 	Name    string `json:"name"`
 }
 
-
 // BeforeInsert hook executed before database insert operation.
 func (i *Face) BeforeInsert(db orm.DB) error {
 	return i.Validate()

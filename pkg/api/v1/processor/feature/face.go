@@ -1,13 +1,13 @@
 package feature
 
 import (
+	"errors"
 	"fmt"
-	"github.com/Kagami/go-face"
 	apiFace "github.com/jurevic/facegrinder/pkg/api/v1/face"
 	"github.com/jurevic/facegrinder/pkg/api/v1/processor/draw"
 	"github.com/jurevic/facegrinder/pkg/datastore"
+	"github.com/jurevic/go-face"
 	"gocv.io/x/gocv"
-	"errors"
 )
 
 type RecogniseFaces struct {
@@ -97,7 +97,6 @@ func (o *RecogniseFaces) Process(frame *gocv.Mat) (err error) {
 		for i := range o.faces {
 			o.boxes[i] = draw.LabeledBox{
 				Rectangle: o.faces[i].Rectangle,
-
 			}
 
 			o.boxes[i].Label = ""

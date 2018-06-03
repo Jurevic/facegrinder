@@ -2,17 +2,17 @@ package auth
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/jurevic/facegrinder/pkg/api/v1/helper/response"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor"
 	"github.com/jurevic/facegrinder/pkg/datastore"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"time"
-	"io/ioutil"
 	"strconv"
-	"fmt"
-	"github.com/jurevic/facegrinder/pkg/api/v1/processor"
+	"time"
 )
 
 type UserCredentials struct {
@@ -107,7 +107,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !user.IsActive{
+	if !user.IsActive {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}

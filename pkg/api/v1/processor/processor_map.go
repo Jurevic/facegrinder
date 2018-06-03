@@ -1,16 +1,16 @@
 package processor
 
 import (
-	"github.com/jurevic/facegrinder/pkg/api/v1/processor/stats"
-	"reflect"
-	"strings"
-	"github.com/jurevic/facegrinder/pkg/api/v1/processor/input"
-	"github.com/jurevic/facegrinder/pkg/api/v1/processor/output"
-	"github.com/jurevic/facegrinder/pkg/api/v1/processor/feature"
-	"github.com/jurevic/facegrinder/pkg/api/v1/processor/transform"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/color"
 	"github.com/jurevic/facegrinder/pkg/api/v1/processor/context"
 	"github.com/jurevic/facegrinder/pkg/api/v1/processor/draw"
-	"github.com/jurevic/facegrinder/pkg/api/v1/processor/color"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/feature"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/input"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/output"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/stats"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor/transform"
+	"reflect"
+	"strings"
 )
 
 // Register your processor here

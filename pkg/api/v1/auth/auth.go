@@ -2,18 +2,12 @@ package auth
 
 import (
 	"crypto/rsa"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/jurevic/facegrinder/pkg/api/v1/helper/app_error"
+	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
-	"os"
-)
-
-const (
-	privateKeyPath = "JWT_PRIVATE_KEY_PATH"
-	publicKeyPath  = "JWT_PUBLIC_KEY_PATH"
 )
 
 var (
@@ -22,15 +16,8 @@ var (
 )
 
 func Init() {
-	privKeyPath, ok := os.LookupEnv(privateKeyPath)
-	if !ok {
-		panic(fmt.Sprintf("%s environment variable required but not set", privateKeyPath))
-	}
-
-	pubKeyPath, ok := os.LookupEnv(publicKeyPath)
-	if !ok {
-		panic(fmt.Sprintf("%s environment variable required but not set", publicKeyPath))
-	}
+	privKeyPath := viper.GetString("jwt_private_key_path")
+	pubKeyPath := viper.GetString("jwt_public_key_path")
 
 	signBytes, err := ioutil.ReadFile(privKeyPath)
 	app_error.Fatal(err)

@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/jurevic/facegrinder/pkg/datastore/migrate"
 	"github.com/jurevic/facegrinder/pkg/datastore"
+	"github.com/jurevic/facegrinder/pkg/datastore/migrate"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var reset bool
@@ -38,6 +39,16 @@ func init() {
 		"reset",
 		false,
 		"migrate down to version 0 then up to latest. WARNING: all data will be lost!")
+
+	// ENV CONFIGURATION
+	viper.SetEnvPrefix("fg")
+	viper.AutomaticEnv()
+
+	// DB
+	viper.SetDefault("db_username", "facegrinder")
+	viper.SetDefault("db_password", "password")
+	viper.SetDefault("db_name", "facegrinder_db")
+	viper.SetDefault("db_address", "localhost:5432")
 
 	datastore.Init()
 }

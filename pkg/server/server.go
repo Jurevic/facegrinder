@@ -5,14 +5,15 @@ import (
 	"github.com/jurevic/facegrinder/pkg/api"
 	"github.com/jurevic/facegrinder/pkg/api/v1/auth"
 	"github.com/jurevic/facegrinder/pkg/api/v1/channel"
+	"github.com/jurevic/facegrinder/pkg/api/v1/face"
+	"github.com/jurevic/facegrinder/pkg/api/v1/processor"
 	"github.com/jurevic/facegrinder/pkg/datastore"
 	m "github.com/jurevic/facegrinder/pkg/middleware"
 	"github.com/jurevic/facegrinder/pkg/rtmp_server"
 	"github.com/rs/cors"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
-	"github.com/jurevic/facegrinder/pkg/api/v1/processor"
-	"github.com/jurevic/facegrinder/pkg/api/v1/face"
 )
 
 func Run() {
@@ -29,10 +30,6 @@ func Run() {
 
 	// SIGN UP
 	r.HandleFunc("/api/v1/users/", auth.Create).Methods("POST")
-
-	// STORAGE
-	r.PathPrefix("/storage/").Handler(
-		http.StripPrefix("/storage/", http.FileServer(http.Dir("storage"))))
 
 	// AUTH
 	ar := r.PathPrefix("/api/auth").Subrouter()
@@ -78,8 +75,17 @@ func Run() {
 	pr.Methods("PUT").Path("/{id}").HandlerFunc(processor.Update)
 	pr.Methods("DELETE").Path("/{id}").HandlerFunc(processor.Delete)
 
+	// STORAGE
+	r.PathPrefix("/storage").Handler(http.StripPrefix("/storage", http.FileServer(http.Dir("storage/"))))
+
+	// FRONTEND
+	r.PathPrefix("/static").Handler(http.FileServer(http.Dir("fe/dist/")))
+	r.PathPrefix("/").HandlerFunc(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "fe/dist/index.html")
+	}))
+
 	// CORS
 	handler := cors.AllowAll().Handler(r)
 
-	log.Fatal(http.ListenAndServe(":8080", handler))
+	log.Fatal(http.ListenAndServe(viper.GetString("address"), handler))
 }

@@ -1,9 +1,9 @@
 package rtmp_server
 
 import (
-	"github.com/nareix/joy4/format/rtmp"
-	"github.com/nareix/joy4/format"
 	"github.com/jurevic/facegrinder/pkg/api/v1/channel"
+	"github.com/nareix/joy4/format"
+	"github.com/nareix/joy4/format/rtmp"
 )
 
 func Init() {

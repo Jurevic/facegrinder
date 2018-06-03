@@ -1,8 +1,8 @@
 package output
 
 import (
-	"gocv.io/x/gocv"
 	"errors"
+	"gocv.io/x/gocv"
 )
 
 type IMShow struct {
@@ -12,7 +12,7 @@ type IMShow struct {
 }
 
 func (o *IMShow) Default() (err error) {
-	o.Label= "Result"
+	o.Label = "Result"
 
 	return
 }

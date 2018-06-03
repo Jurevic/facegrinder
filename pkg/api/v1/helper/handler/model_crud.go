@@ -2,11 +2,9 @@ package handler
 
 import (
 	"net/http"
-	"github.com/gorilla/mux"
-	"github.com/jurevic/facegrinder/pkg/api/v1/helper/response"
 )
 
-type ModelCrudHandler interface{
+type ModelCrudHandler interface {
 	getModel() interface{}
 	getQuery()
 }
@@ -23,18 +21,18 @@ func ListHandler(w http.ResponseWriter, _ *http.Request) {
 }
 
 func RetrieveHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	user := new(User)
-
-	user, ok := user.Find(id)
-	if !ok {
-		http.NotFound(w, r)
-		return
-	}
-
-	response.JsonResponse(user, w)
+	//vars := mux.Vars(r)
+	//id := vars["id"]
+	//
+	//user := new(User)
+	//
+	//user, ok := user.Find(id)
+	//if !ok {
+	//	http.NotFound(w, r)
+	//	return
+	//}
+	//
+	//response.JsonResponse(user, w)
 }
 
 func CreateHandler(w http.ResponseWriter, r *http.Request) {
@@ -74,16 +72,16 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	user := new(User)
-
-	ok := user.Remove(id)
-	if !ok {
-		http.NotFound(w, r)
-		return
-	}
-
-	w.WriteHeader(http.StatusNoContent)
+	//vars := mux.Vars(r)
+	//id := vars["id"]
+	//
+	//user := new(User)
+	//
+	//ok := user.Remove(id)
+	//if !ok {
+	//	http.NotFound(w, r)
+	//	return
+	//}
+	//
+	//w.WriteHeader(http.StatusNoContent)
 }

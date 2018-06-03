@@ -5,8 +5,8 @@ import (
 	"github.com/nareix/joy4/av/avutil"
 	"github.com/nareix/joy4/av/pubsub"
 	"github.com/nareix/joy4/format/rtmp"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 func RtmpPublishHandler() func(conn *rtmp.Conn) {

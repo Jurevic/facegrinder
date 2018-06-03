@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/jurevic/facegrinder/pkg/api/v1/helper/response"
-	"io"
-	"net/http"
-	"html/template"
-	"log"
-	"github.com/nareix/joy4/format/flv"
 	"github.com/nareix/joy4/av/avutil"
+	"github.com/nareix/joy4/format/flv"
+	"html/template"
+	"io"
+	"log"
+	"net/http"
 	"strconv"
 )
 

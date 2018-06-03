@@ -1,11 +1,11 @@
 package middleware
 
 import (
+	"context"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/jurevic/facegrinder/pkg/api/v1/auth"
 	"net/http"
-	"github.com/dgrijalva/jwt-go"
-	"context"
 )
 
 func AuthMiddleware(next http.Handler) http.Handler {

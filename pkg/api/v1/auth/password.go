@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"log"
 	"golang.org/x/crypto/bcrypt"
+	"log"
 )
 
 func hashAndSalt(pwd []byte) []byte {
@@ -24,5 +24,3 @@ func checkPasswordMatch(hash, password []byte) error {
 	// do not match returns err
 	return bcrypt.CompareHashAndPassword(hash, password)
 }
-
-

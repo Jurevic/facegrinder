@@ -3,11 +3,11 @@ package processor
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/jurevic/facegrinder/pkg/api/v1/helper/response"
 	"github.com/jurevic/facegrinder/pkg/datastore"
 	"io/ioutil"
 	"net/http"
-	"github.com/gorilla/mux"
 )
 
 func List(w http.ResponseWriter, r *http.Request) {

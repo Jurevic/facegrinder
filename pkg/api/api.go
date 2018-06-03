@@ -1,8 +1,8 @@
 package api
 
 import (
-	"net/http"
 	"github.com/jurevic/facegrinder/pkg/api/v1/helper/response"
+	"net/http"
 )
 
 const (
@@ -16,4 +16,3 @@ type Version struct {
 func GetVersion(w http.ResponseWriter, r *http.Request) {
 	response.JsonResponse(Version{Version: apiVersion}, w)
 }
-

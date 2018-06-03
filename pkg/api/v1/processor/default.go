@@ -1,8 +1,8 @@
 package processor
 
 import (
-	"github.com/jurevic/facegrinder/pkg/datastore"
 	"encoding/json"
+	"github.com/jurevic/facegrinder/pkg/datastore"
 )
 
 func CreateDefault(userId int) {
