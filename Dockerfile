@@ -73,6 +73,6 @@ RUN cd go/src/github.com/jurevic/facegrinder/ \
 && go install
 
 # Run app
-CMD facegrinder serve
+CMD ./go/src/github.com/jurevic/facegrinder/cv_env.sh && facegrinder serve
 
 EXPOSE 8000
