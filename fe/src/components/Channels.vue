@@ -185,6 +185,7 @@
         }).catch((error) => {
           console.log(error)
         })
+        this.dialog = false
       }
     }
   }

@@ -208,7 +208,7 @@
       },
 
       getElemDefault (key) {
-        return this.choices[this.selectedElemKey].params[key]
+        return this.choices[this.selectedElemKey].default[key]
       },
 
       addElem (index) {

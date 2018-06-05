@@ -6,6 +6,8 @@ import router from '../router'
 
 Vue.use(Vuex)
 
+const API_URL = 'http://0.0.0.0:8000'
+
 export const store = new Vuex.Store({
   state: {
     appTitle: 'FaceGrinder',
@@ -14,13 +16,13 @@ export const store = new Vuex.Store({
     error: null,
     loading: false,
     endpoints: {
-      obtainJWT: 'http://0.0.0.0:8080/api/auth/login',
-      refreshJWT: 'http://0.0.0.0:8080/api/auth/refresh',
-      users: 'http://0.0.0.0:8080/api/v1/users/',
-      faces: 'http://0.0.0.0:8080/api/v1/faces/',
-      channels: 'http://0.0.0.0:8080/api/v1/channels/',
-      processors: 'http://0.0.0.0:8080/api/v1/processors/',
-      processorChoices: 'http://0.0.0.0:8080/api/v1/processors/choices/'
+      obtainJWT: API_URL + '/api/auth/login',
+      refreshJWT: API_URL + '/api/auth/refresh',
+      users: API_URL + '/api/v1/users/',
+      faces: API_URL + '/api/v1/faces/',
+      channels: API_URL + '/api/v1/channels/',
+      processors: API_URL + '/api/v1/processors/',
+      processorChoices: API_URL + '/api/v1/processors/choices/'
     },
     processorChoices: []
   },

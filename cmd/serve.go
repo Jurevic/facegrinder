@@ -25,6 +25,7 @@ func init() {
 
 	// SERVER
 	viper.SetDefault("address", ":8000")
+	viper.SetDefault("host_url", "http://localhost:8000")
 	viper.SetDefault("log_level", "release")
 
 	// DB
