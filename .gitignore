@@ -27,3 +27,6 @@ fe/test/unit/coverage/
 
 # Logs
 *.log
+
+# Environment
+.env

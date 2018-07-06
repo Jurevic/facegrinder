@@ -44,7 +44,7 @@ func (o *FrameLoadFromCtx) Process(frame *gocv.Mat) (err error) {
 		return err
 	}
 
-	loaded.CopyTo(*frame)
+	loaded.CopyTo(frame)
 
 	return
 }

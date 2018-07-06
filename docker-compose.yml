@@ -4,9 +4,9 @@ services:
   db:
     image: postgres:10.1-alpine
     environment:
-     - POSTGRES_USER=facegrinder
-     - POSTGRES_PASSWORD=changethispassword
-     - POSTGRES_DB=facegrinder_db
+     - POSTGRES_USER=${DB_USERNAME}
+     - POSTGRES_PASSWORD=${DB_PASSWORD}
+     - POSTGRES_DB=${DB_NAME}
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
@@ -15,10 +15,10 @@ services:
   app:
     build: .
     environment:
-      - FG_DB_USERNAME=facegrinder
-      - FG_DB_PASSWORD=changethispassword
-      - FG_DB_NAME=facegrinder_db
-      - FG_DB_ADDR=db:5432
+      - DB_HOST=db:5432
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
     ports:
       - "8000:8000"
     depends_on:
