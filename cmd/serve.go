@@ -24,15 +24,23 @@ func init() {
 	viper.AutomaticEnv()
 
 	// SERVER
-	viper.SetDefault("address", ":8000")
-	viper.SetDefault("host_url", "http://localhost:8000")
+	viper.SetDefault("http_listen", ":80")
+
+	// TLS
+	// If use_tls is set to no tls is not used and other settings below are not used
+	viper.SetDefault("use_tls", "no")
+	viper.SetDefault("https_listen", ":443")
+	viper.SetDefault("cert_path", "/etc/ssl/certs/cert.crt")
+	viper.SetDefault("key_path", "/etc/ssl/certs/cert.key")
+
+	// LOG
 	viper.SetDefault("log_level", "release")
 
 	// DB
 	viper.SetDefault("db_username", "facegrinder")
 	viper.SetDefault("db_password", "password")
 	viper.SetDefault("db_name", "facegrinder_db")
-	viper.SetDefault("db_address", "localhost:5432")
+	viper.SetDefault("db_host", "localhost:5432")
 
 	// AUTH
 	viper.SetDefault("jwt_public_key_path", "/usr/src/keys/jwtRS256.key.pub")

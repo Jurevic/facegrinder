@@ -87,5 +87,29 @@ func Run() {
 	// CORS
 	handler := cors.AllowAll().Handler(r)
 
-	log.Fatal(http.ListenAndServe(viper.GetString("address"), handler))
+	// Listen and serve
+	if viper.GetString("use_tls") == "yes" {
+		log.Fatal(
+			http.ListenAndServe(
+				viper.GetString("http_listen"),
+				http.HandlerFunc(redirectTLS)))
+
+		log.Fatal(
+			http.ListenAndServeTLS(
+				viper.GetString("https_listen"),
+				viper.GetString("cert_path"),
+				viper.GetString("key_path"),
+				handler))
+	} else {
+		log.Fatal(
+			http.ListenAndServe(
+				viper.GetString("http_listen"),
+				handler))
+	}
+
+	log.Fatal(http.ListenAndServe(viper.GetString("http_listen"), handler))
+}
+
+func redirectTLS(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "https://" + r.Host + r.RequestURI, http.StatusMovedPermanently)
 }

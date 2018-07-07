@@ -8,7 +8,6 @@ import (
 	"github.com/jurevic/facegrinder/pkg/api/v1/helper/response"
 	"github.com/jurevic/facegrinder/pkg/datastore"
 	"github.com/satori/go.uuid"
-	"github.com/spf13/viper"
 	"image"
 	"image/jpeg"
 	_ "image/png"
@@ -31,7 +30,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := range faces {
-		faces[i].Url = viper.GetString("host_url") + "/" + faces[i].Url
+		faces[i].Url = r.Host + "/" + faces[i].Url
 	}
 
 	response.JsonResponse(faces, w)

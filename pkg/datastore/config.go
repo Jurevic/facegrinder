@@ -6,13 +6,13 @@ import (
 )
 
 func dbConfig() *pg.Options {
-	addr := viper.GetString("db_address")
+	host := viper.GetString("db_host")
 	user := viper.GetString("db_username")
 	password := viper.GetString("db_password")
 	name := viper.GetString("db_name")
 
 	options := pg.Options{
-		Addr:     addr,
+		Addr:     host,
 		User:     user,
 		Password: password,
 		Database: name,

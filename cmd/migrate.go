@@ -48,7 +48,7 @@ func init() {
 	viper.SetDefault("db_username", "facegrinder")
 	viper.SetDefault("db_password", "password")
 	viper.SetDefault("db_name", "facegrinder_db")
-	viper.SetDefault("db_address", "localhost:5432")
+	viper.SetDefault("db_host", "localhost:5432")
 
 	datastore.Init()
 }

@@ -70,6 +70,6 @@ RUN mkdir /usr/src/keys \
     && openssl rsa -in /usr/src/keys/jwtRS256.key -pubout -outform PEM -out /usr/src/keys/jwtRS256.key.pub
 
 # Run app
-CMD facegrinder serve
+CMD ./docker-entrypoint.sh
 
-EXPOSE 8000
+EXPOSE 80
